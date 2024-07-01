@@ -1,36 +1,45 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { loginApi } from '@/api/user'
+import type { LoginParams } from '@/api/user/type'
 
 defineOptions({ name: 'Login' })
 
-const form = ref({
-  username: '',
-  password: ''
+const form = ref<LoginParams>({
+  userAccount: '',
+  userPassword: ''
 })
+const formRef = ref()
+const login = () => {
+  formRef.value.validate().then(async () => {
+    const res = await loginApi(form.value)
+    console.log(res)
+  })
+}
 </script>
 
 <template>
   <div class="container">
     <div class="content">
       <div class="title">用户中心🤗</div>
-      <a-form :model="form" labelAlign="left" :labelCol="{ span: 5 }">
+      <a-form ref="formRef" :model="form" labelAlign="left" :labelCol="{ span: 5 }">
         <a-form-item
-          label="用户名"
-          name="username"
-          :rules="[{ required: true, message: '请输入用户名' }]"
+          label="账号"
+          name="userAccount"
+          :rules="[{ required: true, message: '请输入账号' }]"
         >
-          <a-input v-model:value="form.username" />
+          <a-input v-model:value="form.userAccount" />
         </a-form-item>
 
         <a-form-item
           label="密码"
-          name="password"
+          name="userPassword"
           :rules="[{ required: true, message: '请输入密码' }]"
         >
-          <a-input-password v-model:value="form.password" />
+          <a-input-password v-model:value="form.userPassword" />
         </a-form-item>
         <div class="register">新用户注册</div>
-        <a-button type="primary">登录</a-button>
+        <a-button type="primary" @click="login">登录</a-button>
       </a-form>
     </div>
   </div>

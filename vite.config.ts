@@ -26,5 +26,11 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  // 代理跨域
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8080'
+    }
   }
 })
