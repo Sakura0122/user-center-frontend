@@ -2,6 +2,7 @@ import axios from 'axios'
 import type { Method, AxiosRequestConfig } from 'axios'
 import { hideLoading, showLoading } from '@/utils/loading'
 import { message } from 'ant-design-vue'
+import router from '@/router'
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
@@ -9,21 +10,25 @@ const service = axios.create({
 })
 
 service.interceptors.request.use(
-  config => {
+  (config) => {
     if (config.showLoading) showLoading()
     return config
   },
-  error => {
+  (error) => {
     return Promise.reject(error)
   }
 )
 
 service.interceptors.response.use(
-  res => {
+  (res) => {
     hideLoading()
-    if (res.data.code === 200) {
+    if (res.data.code === 0) {
       return res.data
     } else {
+      if ([40100, 40101].includes(res.data.code)) {
+        router.push('/login')
+      }
+
       if (!res.config.showError) {
         return Promise.resolve(res.data)
       }
@@ -32,7 +37,7 @@ service.interceptors.response.use(
       return Promise.reject(res.data)
     }
   },
-  error => {
+  (error) => {
     hideLoading()
     message.error(error.message || '请求错误')
     return Promise.reject(error)
@@ -43,10 +48,14 @@ type Data<T> = {
   code: string
   data: T
   message: string
-  ok: boolean
 }
 
-const request = <T>(url: string, method: Method = 'get', submitData?: object, config?: AxiosRequestConfig) => {
+const request = <T>(
+  url: string,
+  method: Method = 'get',
+  submitData?: object | string,
+  config?: AxiosRequestConfig
+) => {
   return service.request<T, Data<T>>({
     url,
     method,

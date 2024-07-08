@@ -5,11 +5,17 @@ const router = createRouter({
   routes: [
     {
       path: '/login',
-      component: () => import('@/views/user/login/index.vue')
+      component: () => import('@/views/user/login/index.vue'),
+      meta: {
+        title: '登录'
+      }
     },
     {
       path: '/register',
-      component: () => import('@/views/user/register/index.vue')
+      component: () => import('@/views/user/register/index.vue'),
+      meta: {
+        title: '注册'
+      }
     },
     {
       path: '/',
@@ -18,7 +24,10 @@ const router = createRouter({
       children: [
         {
           path: '/user',
-          component: () => import('@/views/admin/user/index.vue')
+          component: () => import('@/views/admin/user/index.vue'),
+          meta: {
+            title: '用户管理'
+          }
         }
       ]
     }

@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import useUserStore from '@/stores/modules/user'
+import { logoutApi } from '@/api/user'
 
 defineOptions({ name: 'Layout' })
+
+const userStore = useUserStore()
 
 const items = ref([
   {
@@ -15,6 +19,13 @@ const router = useRouter()
 const handleMenuClick = ({ key }: { key: string }) => {
   router.push(key)
 }
+
+// 退出登录
+const handleLogout = async () => {
+  await logoutApi()
+  userStore.clearUserInfo()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -25,7 +36,16 @@ const handleMenuClick = ({ key }: { key: string }) => {
         <div class="title">用户中心</div>
       </div>
       <div class="right">
-        <a-button shape="round" type="primary">登录</a-button>
+        <a-dropdown>
+          <img class="avatar" :src="userStore.userInfo.avatarUrl" alt="" />
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <div @click="handleLogout">退出登录</div>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </div>
     </a-layout-header>
     <a-layout>
@@ -71,6 +91,18 @@ const handleMenuClick = ({ key }: { key: string }) => {
         font-size: 18px;
       }
     }
+
+    .right {
+      height: 60px;
+      display: flex;
+      align-items: center;
+
+      .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+    }
   }
 
   .ant-layout-sider {
@@ -83,7 +115,7 @@ const handleMenuClick = ({ key }: { key: string }) => {
   }
 
   .ant-layout-content {
-    padding: 32px 40px;
+    padding: 12px;
   }
 }
 </style>

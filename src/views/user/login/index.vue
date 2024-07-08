@@ -2,8 +2,14 @@
 import { ref } from 'vue'
 import { loginApi } from '@/api/user'
 import type { LoginParams } from '@/api/user/type'
+import { useRouter } from 'vue-router'
+import useUserStore from '@/stores/modules/user'
+import { message } from 'ant-design-vue'
 
 defineOptions({ name: 'Login' })
+
+const router = useRouter()
+const userStore = useUserStore()
 
 const form = ref<LoginParams>({
   userAccount: '',
@@ -13,7 +19,9 @@ const formRef = ref()
 const login = () => {
   formRef.value.validate().then(async () => {
     const res = await loginApi(form.value)
-    console.log(res)
+    userStore.setUserInfo(res.data)
+    message.success('登录成功')
+    router.push('/')
   })
 }
 </script>
@@ -21,24 +29,28 @@ const login = () => {
 <template>
   <div class="container">
     <div class="content">
-      <div class="title">用户中心🤗</div>
-      <a-form ref="formRef" :model="form" labelAlign="left" :labelCol="{ span: 5 }">
+      <div class="title">用户登录🤗</div>
+      <a-form ref="formRef" :model="form" labelAlign="left" :labelCol="{ span: 6 }">
         <a-form-item
           label="账号"
           name="userAccount"
-          :rules="[{ required: true, message: '请输入账号' }]"
+          :rules="[{ required: true, message: '请输入账号', trigger: 'blur' }]"
         >
-          <a-input v-model:value="form.userAccount" />
+          <a-input placeholder="请输入账号" v-model:value="form.userAccount" />
         </a-form-item>
-
         <a-form-item
           label="密码"
           name="userPassword"
-          :rules="[{ required: true, message: '请输入密码' }]"
+          :rules="[
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            { min: 8, message: '密码长度不能小于8位', trigger: 'blur' }
+          ]"
         >
-          <a-input-password v-model:value="form.userPassword" />
+          <a-input-password placeholder="请输入密码" v-model:value="form.userPassword" />
         </a-form-item>
-        <div class="register">新用户注册</div>
+        <div class="nav">
+          <span @click="$router.push('/register')">新用户注册</span>
+        </div>
         <a-button type="primary" @click="login">登录</a-button>
       </a-form>
     </div>
@@ -66,11 +78,14 @@ const login = () => {
       width: 328px;
       margin-top: 24px;
 
-      .register {
+      .nav {
         text-align: right;
         color: #1677ff;
         font-size: 14px;
-        cursor: pointer;
+
+        span {
+          cursor: pointer;
+        }
       }
 
       .ant-btn {

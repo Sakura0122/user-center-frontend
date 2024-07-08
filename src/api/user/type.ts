@@ -3,57 +3,61 @@ export type LoginParams = {
   userPassword: string
 }
 
+export type RegisterParams = {
+  checkPassword: string
+} & LoginParams
+
 export type UserInfo = {
   /**
    * 用户头像
    */
-  avatarUrl: string;
+  avatarUrl: string
   /**
    * 创建时间
    */
-  createTime: string;
+  createTime: string
   /**
    * 邮箱
    */
-  email: string;
+  email: string
   /**
    * 性别
    */
-  gender: number;
+  gender: number
   /**
    * id
    */
-  id: number;
+  id: string
   /**
    * 是否删除
    */
-  isDelete: number;
+  isDelete: number
   /**
    * 电话
    */
-  phone: string;
+  phone: string
   /**
    * 更新时间
    */
-  updateTime: string;
+  updateTime: string
   /**
    * 账号
    */
-  userAccount: string;
+  userAccount: string
   /**
    * 用户昵称
    */
-  username: string;
+  username: string
   /**
    * 密码
    */
-  userPassword: string;
+  userPassword: string
   /**
    * 角色 0-普通用户 1-管理员
    */
-  userRole: number;
+  userRole: number
   /**
    * 用户状态 0-正常
    */
-  userStatus: number;
+  userStatus: number
 }
