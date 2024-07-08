@@ -15,7 +15,7 @@ export type UserInfo = {
   /**
    * 创建时间
    */
-  createTime: string
+  createTime?: string
   /**
    * 邮箱
    */
@@ -31,7 +31,7 @@ export type UserInfo = {
   /**
    * 是否删除
    */
-  isDelete: number
+  isDelete?: number
   /**
    * 电话
    */
@@ -39,11 +39,11 @@ export type UserInfo = {
   /**
    * 更新时间
    */
-  updateTime: string
+  updateTime?: string
   /**
    * 账号
    */
-  userAccount: string
+  userAccount?: string
   /**
    * 用户昵称
    */
@@ -51,7 +51,7 @@ export type UserInfo = {
   /**
    * 密码
    */
-  userPassword: string
+  userPassword?: string
   /**
    * 角色 0-普通用户 1-管理员
    */

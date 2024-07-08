@@ -40,6 +40,14 @@ export function getUserListApi(userName: string) {
 }
 
 /**
+ * 更新用户信息
+ * @param data 用户信息
+ */
+export function updateUserApi(data: UserInfo) {
+  return request<boolean>('/user/update', 'post', data)
+}
+
+/**
  * 删除用户
  * @param id 用户id
  */

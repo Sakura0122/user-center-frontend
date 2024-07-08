@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import type { UserInfo } from '@/api/user/type'
 import type { ColumnProps } from 'ant-design-vue/es/table'
 import { message, Modal } from 'ant-design-vue'
+import UserModal from '@/views/admin/user/components/user-modal.vue'
 
 const columns: ColumnProps<UserInfo>[] = [
   {
@@ -67,6 +68,11 @@ const search = () => {
   getUserData()
 }
 
+const userModalRef = ref<InstanceType<typeof UserModal>>()
+const handleEditUser = (user: UserInfo) => {
+  userModalRef.value?.showModal(user)
+}
+
 const handleDelUser = (id: string) => {
   Modal.confirm({
     title: '确认删除该用户吗?',
@@ -94,11 +100,12 @@ const handleDelUser = (id: string) => {
       </template>
       <template v-else-if="column.key === 'tags'"></template>
       <template v-else-if="column.key === 'action'">
-        <a-button type="link">编辑</a-button>
+        <a-button type="link" @click="handleEditUser(record)">编辑</a-button>
         <a-button type="link" @click="handleDelUser(record.id)">删除</a-button>
       </template>
     </template>
   </a-table>
+  <user-modal ref="userModalRef" @update="search" />
 </template>
 
 <style scoped lang="scss">
